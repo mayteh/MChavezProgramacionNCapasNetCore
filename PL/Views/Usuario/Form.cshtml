@@ -143,6 +143,7 @@
                             <div class="col-md-3">
                                 @*@Html.LabelFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.IdPais)*@
                                 @Html.Label("Pais")
+                                
                                 <div class="input-group md-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-globe-americas"></i></span>
@@ -155,50 +156,59 @@
                             </div>    @*Pais*@
 
                             <div class="col-md-3">
-                                @Html.LabelFor(model => model.Direccion.Colonia.Municipio.Estado)
+                                @*@Html.LabelFor(model => model.Direccion.Colonia.Municipio.Estado.Estados)*@
+                                @Html.Label("Estado")
                                 <div class="input-group">
 
                                     @if (Model.Direccion.Colonia.Municipio.Estado.Estados == null)
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlEstado", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado)*@
                                     }
 
                                     else
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(Model.Direccion.Colonia.Municipio.Estado.Estados, "IdEstado", "NombreEstado"), "Seleciona un grupo", htmlAttributes: new { id = "ddlEstado", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado)*@
                                     }
 
                                 </div>
                             </div>      @*Estado*@
 
                             <div class="col-md-3">
-                                @Html.LabelFor(model => model.Direccion.Colonia.Municipio)
+                                @*@Html.LabelFor(model => model.Direccion.Colonia.Municipio.Municipios)*@
+                                @Html.Label("Municipio")
                                 <div class="input-group">
 
                                     @if (Model.Direccion.Colonia.Municipio.Municipios == null)
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlMunicipio", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.IdMunicipio)*@
                                     }
 
                                     else
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(Model.Direccion.Colonia.Municipio.Municipios, "IdMunicipio", "NombreMunicipio"), "Seleciona un grupo", htmlAttributes: new { id = "ddlMunicipio", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.IdMunicipio)*@
                                     }
 
                                 </div>
                             </div>     @*Municipio*@
 
                             <div class="col-md-3">
-                                @Html.LabelFor(model => model.Direccion.Colonia)
+                                @*@Html.LabelFor(model => model.Direccion.Colonia.Colonias)*@
+                                @Html.Label("Colonia")
                                 <div class="input-group">
                                     @if (Model.Direccion.Colonia.Colonias == null)
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.IdColonia, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlColonia", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.IdColonia)*@
                                     }
 
                                     else
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.IdColonia, new SelectList(Model.Direccion.Colonia.Colonias, "IdColonia", "NombreColonia"), "Seleciona un grupo", htmlAttributes: new { id = "ddlColonia", @class = "form-control" })
+                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.IdColonia)*@
                                     }
 
                                 </div>

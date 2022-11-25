@@ -9,8 +9,8 @@ namespace ML
     public class Estado
     {
         public int IdEstado { get; set; }
-        public string NombreEstado { get; set; }
-        public List<object> Estados { get; set; }
+        public string? NombreEstado { get; set; }
+        public List<object>? Estados { get; set; }
 
         public ML.Pais Pais { get; set; } //propiedad de nuestra clase principal
     }
