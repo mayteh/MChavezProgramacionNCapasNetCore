@@ -1,0 +1,81 @@
+﻿@model ML.Aseguradora
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <h2>Aseguradora</h2>
+    <p>Aqui podra ver los datos relacionados con la empresa asi como editar y eliminar</p>
+</div>
+    <div class=" row">
+        <div style="float:right">
+            @Html.ActionLink("Agregar", "Form", "Aseguradora", htmlAttributes: new { @class = "btn btn-success" }) @*Agregar un boton + *@
+        </div>
+    </div>
+
+
+
+    <dir class=" row">
+        <table class=" table table-responsive" id="tblAseg">
+            <thead class="thead-dark">
+                <tr>
+                    @*<th>Hace referencia a las cabeceras de la tabla</th>*@
+                    <th>Editar</th>
+                    <th class=" d-none">IdAseguradora</th> @*se oculta el id del usuario ya que no es necesario el mostrarlo*@
+                    <th>Nombre</th>
+                    <th>Fecha de Creacion</th>
+                    <th>Fecha de Modificacion</th>
+                    <th class="d-none">Id Usuario</th>
+                    <th>Nombre Usuario</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ML.Aseguradora aseguradora in Model.Aseguradoras)
+                {
+                    <tr>
+                        <td class="text-center"><a class="bi bi-pencil-square btn btn-warning glyphicon glyphicon-edit" href="@Url.Action("Form", "Aseguradora", new { IdAseguradora = aseguradora.IdAseguradora})"></a></td>
+                        <td class="d-none">@aseguradora.IdAseguradora</td>
+                        <td>@aseguradora.NombreAseguradora</td> @*se concatena para que muestre todo junto*@
+                        <td>@aseguradora.FechaCreacion</td>
+                        <td>@aseguradora.FechaModificacion</td>
+                        <td class="d-none">@aseguradora.IdUsuario</td>
+                        <td>@aseguradora.NombreUsuario @aseguradora.ApellidoPaternoU @aseguradora.ApellidoMaternoU</td>
+                        <td class="text-center"><a class="bi bi-file-earmark-x-fill btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Aseguradora", new { IdAseguradora = aseguradora.IdAseguradora })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
+
+                    </tr>
+
+                }
+            <tbody>
+        </table>
+    </dir>
+
+@section Scripts
+    {
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.material.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tblAseg').DataTable({
+                searching: false,
+                "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                },
+            });
+        });
+    </script>
+
+}
+

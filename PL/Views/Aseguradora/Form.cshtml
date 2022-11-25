@@ -1,0 +1,91 @@
+﻿@model ML.Aseguradora
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Form</h2>
+    <p>Aqui puede ver y actualizar los datos de la Aseguradora</p>
+
+    <div class="row">
+        <div class=" col-md-12">
+
+            @using (Html.BeginForm("Form", "Aseguradora", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            @Html.LabelFor(model => model.IdAseguradora, new { @class = "hidden" }) @*LabelFor hace referencia a una etiqueta con texto*@
+
+                            @Html.TextBoxFor(model => model.IdAseguradora, new { @class = "hidden form-control" }) @*Crea una caja de texto con el nombre que le indiquemos  y con un valor por defecto en el segundo parámetro.*@
+
+                            @Html.ValidationMessageFor(model => model.IdAseguradora)
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            @Html.LabelFor(model => model.NombreAseguradora)
+
+                            @Html.TextBoxFor(model => model.NombreAseguradora, new { @class = "form-control", @id = "txtNombre" })
+
+                            @Html.ValidationMessageFor(model => model.NombreAseguradora)
+
+                        </div>
+
+                    </div>
+                   @* <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            @Html.LabelFor(model => model.IdUsuario)
+
+                            @Html.TextBoxFor(model => model.IdUsuario, new { @class = "form-control", @id = "txtNombre" })
+
+                            @Html.ValidationMessageFor(model => model.IdUsuario)
+
+                        </div>
+
+                    </div>*@
+                    <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            @Html.LabelFor(model => model.Usuario.IdUsuario)
+
+                            @Html.DropDownListFor(model => model.Usuario.IdUsuario, new SelectList(Model.Usuario.Usuarios, "IdUsuario", "NombreUsuario"), "Selecciona una opción", new { id = "ddlUsuario", @class = "form-control" })
+
+                            @Html.ValidationMessageFor(model => model.Usuario.IdUsuario)
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            <input type="submit" value="Guardar" class="btn btn-success" />
+                            @*Se crea el boton de guardar*@
+
+                            @Html.ActionLink("Regresar", "GetAll", "Aseguradora", htmlAttributes: new { @class = "btn btn-danger" })
+                            @*Se crea el boton de regresar se regresa al metodo GetAll en el controlador de usuario*@
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+    </div>
+
+</div>
