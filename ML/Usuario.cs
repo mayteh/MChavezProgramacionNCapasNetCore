@@ -14,11 +14,14 @@ namespace ML
         public string UserName { get; set; }
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Es necesario que el usuario tenga un nombre")]
         public string NombreUsuario { get; set; }
+        [Required]
         public string ApellidoPaternoU { get; set; }
         public string ApellidoMaternoU { get; set; }
+        [Required]
         public string Password { get; set; }
+        [StringLength(10)]
         public string Telefono { get; set; }
         public string Celular { get; set; }
         public int Edad { get; set; }
