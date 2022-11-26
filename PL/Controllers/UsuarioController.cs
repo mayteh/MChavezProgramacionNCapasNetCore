@@ -167,13 +167,18 @@ namespace PL.Controllers
                 ML.Result result = BL.Rol.GetAll();
                 ML.Result resultPais = BL.Pais.GetAll();
 
+                usuario.Rol = new ML.Rol();
+
+                usuario.Direccion = new ML.Direccion();
+                usuario.Direccion.Colonia = new ML.Colonia();
+                usuario.Direccion.Colonia.Municipio = new ML.Municipio();
+                usuario.Direccion.Colonia.Municipio.Estado = new ML.Estado();
+                usuario.Direccion.Colonia.Municipio.Estado.Pais = new ML.Pais();
+
                 usuario.Rol.Roles = result.Objects;
                 usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
                 return View(usuario);
             }
- 
-                
-
         }
 
         public ActionResult Delete(ML.Usuario usuario)

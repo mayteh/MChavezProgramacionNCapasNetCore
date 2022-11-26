@@ -62,12 +62,12 @@
                                 <div class="input-group mb-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-circle"></i></span>
-                                    @Html.TextBoxFor(model => model.NombreUsuario, new { @class = "form-control", @id = "txtNombre" })
+                                    @Html.TextBoxFor(model => model.NombreUsuario, new { @class = "form-control", @id = "txtNombre", @onkeypress="return SoloLetras(event,'lblNombre')" })
 
                                     @Html.ValidationMessageFor(model => model.NombreUsuario)
 
                                 </div>
-
+                                @Html.Label("",null, new{@id="lblNombre"})
                             </div>   @*NombreUsuario*@
 
                             <div class="col-md-3">
@@ -75,11 +75,12 @@
                                 <div class="input-group mb-3">
 
                                     @*<span class="input-group-text" id="basic-addon1"><i class="bi bi-person-circle"></i></span>*@
-                                    @Html.TextBoxFor(model => model.ApellidoPaternoU, new { @class = "form-control" })
+                                    @Html.TextBoxFor(model => model.ApellidoPaternoU, new { @class = "form-control", @id="txtApellidoP", @onkeypress="return SoloLetras(event,'lblApellidoP')" })
 
                                     @Html.ValidationMessageFor(model => model.ApellidoPaternoU)
 
                                 </div>
+                                @Html.Label("", null, new {@id="lblApellidoP"})
 
                             </div> @*ApellidoPaterno*@
 
@@ -88,12 +89,12 @@
                                 <div class="input-group mb-3">
 
                                     @*<span class="input-group-text" id="basic-addon1"><i class="bi bi-person-circle"></i></span>*@
-                                    @Html.TextBoxFor(model => model.ApellidoMaternoU, new { @class = "form-control" })
-
+                                    @Html.TextBoxFor(model => model.ApellidoMaternoU, new { @class = "form-control", @id="txtApellidoM", @onkeypress="return SoloLetras(event, 'lblApellidoM')" })
+                                    
                                     @Html.ValidationMessageFor(model => model.ApellidoMaternoU)
 
                                 </div>
-
+                                @Html.Label("",null, new{@id="lblApellidoM"})
                             </div> @*ApellidoMaterno*@
 
                             <div class="col-md-3">
@@ -163,7 +164,7 @@
                                     @if (Model.Direccion.Colonia.Municipio.Estado.Estados == null)
                                     {
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlEstado", @class = "form-control" })
-                                        @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado)*@
+
                                     }
 
                                     else
@@ -171,7 +172,6 @@
                                         @Html.DropDownListFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(Model.Direccion.Colonia.Municipio.Estado.Estados, "IdEstado", "NombreEstado"), "Seleciona un grupo", htmlAttributes: new { id = "ddlEstado", @class = "form-control" })
                                         @*@Html.ValidationMessageFor(model => model.Direccion.Colonia.Municipio.Estado.IdEstado)*@
                                     }
-
                                 </div>
                             </div>      @*Estado*@
 
@@ -219,29 +219,31 @@
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
 
-                                    @Html.TextBoxFor(model => model.Direccion.Calle, new { @class = "form-control", @id = "txtCalle" })
+                                    @Html.TextBoxFor(model => model.Direccion.Calle, new { @class = "form-control", @id = "txtCalle", @onkeypress="return SoloLetras(event,'lblCalle')" })
                                     @Html.ValidationMessageFor(model => model.Direccion.Calle)
 
                                 </div>
-
+                                 @Html.Label("", null, new{@id="lblCalle"})
                             </div>  @*Calle*@
 
                             <div class="col-md-3">
                                 @Html.LabelFor(model => model.Direccion.NumeroInterior)
                                 <div class="input-group">
 
-                                    @Html.TextBoxFor(model => model.Direccion.NumeroInterior, new { @class = "form-control", @id = "txtNumeroInterior" })
+                                    @Html.TextBoxFor(model => model.Direccion.NumeroInterior, new { @class = "form-control", @id = "txtNumI", @onkeypress="return SoloNumeros(event,'lblNumI')" })
                                     @Html.ValidationMessageFor(model => model.Direccion.NumeroInterior)
                                 </div>
+                                @Html.Label("",null, new {@id="lblNumI"})
                             </div>  @*Numero Interior*@
 
                             <div class="col-md-3">
                                 @Html.LabelFor(model => model.Direccion.NumeroExterior)
                                 <div class="input-group">
 
-                                    @Html.TextBoxFor(model => model.Direccion.NumeroExterior, new { @class = "form-control", @id = "txtNumeroExterior" })
+                                    @Html.TextBoxFor(model => model.Direccion.NumeroExterior, new { @class = "form-control", @id = "txtNumE", @onkeypress="return SoloNumeros(event,'lblNumE')" })
                                     @Html.ValidationMessageFor(model => model.Direccion.NumeroExterior)
                                 </div>
+                                @Html.Label("",null, new {@id="lblNumE"})
                             </div>  @*Numero Exterior*@
 
                             <div class="col-md-3">
@@ -269,14 +271,15 @@
 
                                 @Html.LabelFor(model => model.Telefono)
 
-                                <div class="input-group mb-3">
+                                <div class="input-group md-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone"></i></span>
-                                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control" })
+                                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control", @id="txtTelefono", @onkeypress="return SoloNumeros(event,'lblTelefono')"})
 
                                     @Html.ValidationMessageFor(model => model.Telefono)
 
                                 </div>
+                                @Html.Label("",null, new {@id="lblTelefono"})
 
                             </div>  @*Telefono*@
 
@@ -284,15 +287,14 @@
 
                                 @Html.LabelFor(model => model.Celular)
 
-                                <div class="input-group mb-3">
+                                <div class="input-group md-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-phone"></i></span>
-                                    @Html.TextBoxFor(model => model.Celular, new { @class = "form-control" })
+                                    @Html.TextBoxFor(model => model.Celular, new { @class = "form-control", @id="txtCelular", @onkeypress="return SoloNumeros(event, 'lblCelular')"})
 
                                     @Html.ValidationMessageFor(model => model.Celular)
-
                                 </div>
-
+                                @Html.Label("",null, new {@id="lblCelular"})
                             </div>  @*Celular*@
                             <div class="col-md-3">
 
@@ -301,7 +303,7 @@
                                 <div class="input-group mb-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope-at"></i></span>
-                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id="txtEmail" })
 
                                     @Html.ValidationMessageFor(model => model.Email)
 
@@ -323,14 +325,15 @@
                                 <div class="input-group mb-3">
 
                                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill-lock"></i></span>
-                                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "password" })
+                                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control" , @type = "password", @id="txtPassword", @placeholder="Password", @name="confpass"})
 
                                     @Html.ValidationMessageFor(model => model.Password)
 
                                 </div>
-
+                                @Html.TextBoxFor(model => model.Password, new {@class = "form-control", @type = "password", @id="txtConfirmPassword", @placeholder="Confirm Passward", @name="confpass"})
+                                @Html.LabelFor(model => model.Password, new {@class = "registrationFormAlert", @type = "password", @id="CheckPasswordMatch"})
                             </div>  @*Password*@
-
+                            
                             <div class="col-md-3">
 
                                 @Html.LabelFor(model => model.UserName)
@@ -498,6 +501,48 @@
               alert("Solo archivos jpg/jpeg y png son aceptados");
                 }
     }  /*Validar el tipo de imagen*/
+
+
+    function SoloNumeros(e, controlId) {
+            var caracter = e.key;
+            if (!/^[0-9]/g.test(caracter)) {
+                $('#' + controlId).text("Solo se aceptan numeros");
+                $('#' + controlId).css({ "color": "red" });
+                return false;
+            }
+            else {
+                $('#' + controlId).text("");
+                return true;
+            }
+    } /*Validar solo numeros*/
+
+    function SoloLetras(e, controlId) {
+            var caracter = e.key;
+            if (!/^[a-zA-Z]/g.test(caracter)) {
+                $('#' + controlId).text("Solo se aceptan letras");
+                $('#' + controlId).css({ "color": "red" });
+                return false;
+            }
+            else {
+                $('#' + controlId).text("");
+                return true;
+            }
+        } /*Validar solo letras*/
+
+
+       
+        function checkPasswordMatch() {
+            var password = $("#txtPassword").val();
+            var confirmPassword = $("#txtConfirmPassword").val();
+            if (password != confirmPassword)
+                $("#CheckPasswordMatch").html("Las contraseñas no coinciden!");
+            else
+                $("#CheckPasswordMatch").html("La contraseña coincide!");
+        }
+        $(document).ready(function () {
+            $("#txtConfirmPassword").keyup(checkPasswordMatch);
+        }); /*Validar contraseña*/
+
 
     </script>   @*Funciones de validacion *@
 
