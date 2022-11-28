@@ -12,6 +12,6 @@ namespace ML
         public string? NombreEstado { get; set; }
         public List<object>? Estados { get; set; }
 
-        public ML.Pais Pais { get; set; } //propiedad de nuestra clase principal
+        public ML.Pais? Pais { get; set; } //propiedad de nuestra clase principal
     }
 }

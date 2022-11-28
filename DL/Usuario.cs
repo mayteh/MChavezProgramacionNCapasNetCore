@@ -33,6 +33,8 @@ public partial class Usuario
 
     public string? Imagen { get; set; }
 
+    public bool? Status { get; set; }
+
     public virtual ICollection<Aseguradora> Aseguradoras { get; } = new List<Aseguradora>();
 
     public virtual ICollection<Direccion> Direccions { get; } = new List<Direccion>();
@@ -56,14 +58,15 @@ public partial class Usuario
 
     //Municipio
     public int IdMunicipio { get; set; }
-    public string NombreMunicipio { get; set; }
+    public string? NombreMunicipio { get; set; }
 
     //Estado
     public int IdEstado { get; set; }
-    public string NombreEstado { get; set; }
+    public string? NombreEstado { get; set; }
 
     //Pais
     public int IdPais { get; set; }
-    public string NombrePais { get; set; }
+    public string? NombrePais { get; set; }
+
 
 }

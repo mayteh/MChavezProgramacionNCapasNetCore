@@ -76,6 +76,7 @@ namespace BL
                             usuarioobj.Direccion.Colonia.Municipio.Estado.Pais.IdPais = objeto.IdPais;
                             usuarioobj.Direccion.Colonia.Municipio.Estado.Pais.NombrePais = objeto.NombrePais;
 
+                            usuarioobj.Status = objeto.Status.Value;
 
                             result.Objects.Add(usuarioobj);//Agrega todos los datos a usuario
                         }
@@ -178,7 +179,7 @@ namespace BL
             {
                 using (DL.MchavezProgramacionNcapasContext contex = new DL.MchavezProgramacionNcapasContext())
                 {
-                    int query = contex.Database.ExecuteSqlRaw($"UsuarioAdd '{usuario.NombreUsuario}', '{usuario.ApellidoPaternoU}', '{usuario.ApellidoMaternoU}','{usuario.FechaNacimiento}', '{usuario.Genero}', '{usuario.Password}', '{usuario.Telefono}', '{usuario.Celular}', '{usuario.Curp}', '{usuario.UserName}','{usuario.Email}',{usuario.Rol.IdRol}, '{usuario.Imagen}','{usuario.Direccion.Calle}', '{usuario.Direccion.NumeroInterior}', '{usuario.Direccion.NumeroExterior}', {usuario.Direccion.Colonia.IdColonia}");
+                    int query = contex.Database.ExecuteSqlRaw($"UsuarioAdd '{usuario.NombreUsuario}', '{usuario.ApellidoPaternoU}', '{usuario.ApellidoMaternoU}','{usuario.FechaNacimiento}', '{usuario.Genero}', '{usuario.Password}', '{usuario.Telefono}', '{usuario.Celular}', '{usuario.Curp}', '{usuario.UserName}','{usuario.Email}',{usuario.Rol.IdRol}, '{usuario.Imagen}', {usuario.Status},'{usuario.Direccion.Calle}', '{usuario.Direccion.NumeroInterior}', '{usuario.Direccion.NumeroExterior}', {usuario.Direccion.Colonia.IdColonia}");
 
                     if (query > 0)
                     {
@@ -394,5 +395,38 @@ namespace BL
 
             return result;
         }
+
+
+        public static ML.Result ChangeStatus(int idUsuario, int status)
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                using (DL.MchavezProgramacionNcapasContext context = new DL.MchavezProgramacionNcapasContext())
+                {
+                    //int query = context.Database.ExecuteSqlRaw($"UsuarioUpdate {usuario.IdUsuario}, '{usuario.NombreUsuario}', '{usuario.ApellidoPaternoU}', '{usuario.ApellidoMaternoU}', '{usuario.FechaNacimiento}', '{usuario.Genero}', '{usuario.Password}', '{usuario.Telefono}', '{usuario.Celular}', '{usuario.Curp}', '{usuario.UserName}','{usuario.Email}', {usuario.Rol.IdRol}, '{usuario.Direccion.Calle}', '{usuario.Direccion.NumeroInterior}', '{usuario.Direccion.NumeroExterior}', {usuario.Direccion.Colonia.IdColonia}");
+                    int query = context.Database.ExecuteSqlRaw($"UsuarioChangeStatus {idUsuario}, {status}");
+
+                    if (query > 0)
+                    {
+                        result.Message = "EL dato se modifico correctamente";
+                    }
+
+                }
+                result.Correct = true;
+            }// cierre de try
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.Ex = ex;
+                result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+                throw;
+            }//(Algún error en el programa)
+            return result;
+
+
+        }
+
     }
 }

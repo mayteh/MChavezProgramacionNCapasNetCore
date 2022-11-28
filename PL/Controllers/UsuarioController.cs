@@ -230,5 +230,13 @@ namespace PL.Controllers
             return bytes;
         }  //COnvertir en un arreglo de bytes
 
+
+        //PARA STATUS
+
+        public JsonResult ActualizarEstatus(int idUsuario, int status)
+        {
+            var result = BL.Usuario.ChangeStatus(idUsuario, status);   //Se inicializa el result con el metodo ChangeStatus
+            return Json(result.Object);
+        }
     }
 }

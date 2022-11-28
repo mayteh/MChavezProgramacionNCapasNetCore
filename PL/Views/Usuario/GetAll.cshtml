@@ -59,7 +59,7 @@
                     <th class="d-none">Direccion</th>
                     <th>Direccion</th>
                     <th>Imagen</th>
-
+                    <th>Status</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
@@ -95,13 +95,28 @@
                             <td><img id="Img" src="~/Imagen/NoFoto.jpg" style=" height:100px; width:100px;" /></td>
                         }
 
+                        <td>
+
+                            @if (usuario.Status)
+                            {
+                                    <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked onchange="ChangeStatus(@usuario.IdUsuario,0)">
+                                    </div>                   
+                            }
+                            else
+                            {
+                                    <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" disabled onchange="ChangeStatus(@usuario.IdUsuario,1)">
+                                    </div>
+                            }
+                        </td>
                         <td class="text-center"><a class="bi bi-file-earmark-x-fill btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Usuario", new { IdUsuario = usuario.IdUsuario })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-</div>
+
 
 
 @section Scripts
@@ -131,5 +146,19 @@
         });
     </script>
 
+    <script type="text/javascript">
+        function ChangeStatus(idUsuario, status) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ActualizarEstatus")',
+                    dataType: 'json',
+                    data: { idUsuario, status},
+                    success: {              },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                    }
+                });
+        }
+    </script>
 }
 
