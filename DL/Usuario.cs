@@ -68,5 +68,4 @@ public partial class Usuario
     public int IdPais { get; set; }
     public string? NombrePais { get; set; }
 
-
 }

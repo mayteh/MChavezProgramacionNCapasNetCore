@@ -17,11 +17,11 @@ public partial class Aseguradora
 
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
-
     //AGREGADAS PARA USO USUARIO//
     public string NombreUsuario { get; set; }
 
     public string ApellidoPaterno { get; set; }
 
     public string? ApellidoMaterno { get; set; }
+
 }
