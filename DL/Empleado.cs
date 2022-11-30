@@ -19,15 +19,19 @@ public partial class Empleado
 
     public string Telefono { get; set; } = null!;
 
-    public DateTime? FechaNacimiento { get; set; }
+    public DateTime FechaNacimiento { get; set; }
 
     public string? Nss { get; set; }
 
-    public DateTime? FechaIngreso { get; set; }
+    public DateTime FechaIngreso { get; set; }
 
     public string? Foto { get; set; }
 
     public int? IdEmpresa { get; set; }
 
     public virtual Empresa? IdEmpresaNavigation { get; set; }
+
+    //Agregadas de Empresa para usar sus proppiedades
+
+    public string NombreEmpresa { get; set; }
 }

@@ -15,6 +15,6 @@ namespace ML
             public string DireccionWeb { get; set; }
             public List<object> Empresas { get; set; }
 
-        public string? Logo { get; set; }
+            public string? Logo { get; set; }
     }
 }

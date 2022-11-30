@@ -1,0 +1,96 @@
+﻿@model ML.Empleado
+@{
+    ViewData["Title"] = "GetAll";
+}
+
+<div class="container">
+    <h2>Empleado</h2>
+    <p>Aqui podra ver los datos relacionados con el empleado asi como editar y eliminar</p>
+</div>
+
+<div style="float:right;">
+    @Html.ActionLink("Agregar", "Form", "Empleado", htmlAttributes: new { @class = "btn btn-success" })
+</div>
+
+<dir class=" row">
+    <table class=" table table-responsive" id="tblEmpleado">
+        <thead class="thead-dark">
+            <tr>
+                @*<th>Hace referencia a las cabeceras de la tabla</th>*@
+                <th>Editar</th>
+                <th class=" d-none">NumeroEmpleado</th> @*se oculta el id del usuario ya que no es necesario el mostrarlo*@
+                <th>RFC</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Fecha de Nacimiento</th>
+                <th>NSS</th>
+                <th>Fecha de Ingreso</th>  
+                <th class=" d-none">IdEmpresa</th>
+                <th>Empresa</th>
+                <th>Foto</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(ML.Empleado empleado in Model.Empleados)
+            {
+                <tr>
+                    <td class="text-center"><a class="bi bi-pencil-square btn btn-warning glyphicon glyphicon-edit" href="@Url.Action("Form", "Empleado", new { NumeroEmpleado = empleado.NumeroEmpleado})"></a></td>
+                    <td class="d-none">@empleado.NumeroEmpleado</td>
+                    <td>@empleado.RFC</td>
+                    <td>@empleado.NombreEmpleado @empleado.ApellidoPaternoE @empleado.ApellidoMaternoE</td>
+                    <td>@empleado.Email</td>
+                    <td>@empleado.Telefono</td>
+                    <td>@empleado.FechaNacimiento</td> @*se concatena para que muestre todo junto*@
+                    <td>@empleado.NSS</td>
+                    <td>@empleado.FechaIngreso</td>
+
+                    @if (empleado.Foto != null)
+                    {
+                        <td><img src="data:image/*;base64, @empleado.Foto" style="height:100px; width:100px;" /></td>
+                    }
+                    else
+                    {
+                        <td><img id="Img" src="~/Imagen/NoFoto.jpg" style=" height:100px; width:100px;" /></td>
+                    }
+                    <td class="d-none">@empleado.Empresa.IdEmpresa</td>
+                    <td>@empleado.Empresa.NombreEmpresa</td>
+
+
+                    <td class="text-center"><a class="bi bi-file-earmark-x-fill btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Empleado", new { NumeroEmpleado = empleado.NumeroEmpleado })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
+                </tr>
+            }
+        <tbody>
+    </table>
+</dir>
+
+@section Scripts
+    {
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.material.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#tblEmpleado').DataTable({
+                searching: false,
+                "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                },
+            });
+        });
+    </script>
+
+}
+
