@@ -30,13 +30,13 @@ namespace SL.Controllers
 
         [HttpPost("GetAll")]
         //public IEnumerable<string> Get()
-        public IActionResult GetAll(string? Nombre, string? ApellidoPaterno, byte? Rol)
+        public IActionResult GetAll(string? Nombre, string? ApellidoPaterno, byte Rol)
         {
             ML.Usuario usuario = new ML.Usuario();
             usuario.Rol = new ML.Rol();
             usuario.NombreUsuario = (Nombre == null) ? "" : Nombre;
             usuario.ApellidoPaternoU = (ApellidoPaterno == null) ? "" : ApellidoPaterno;
-            usuario.Rol.IdRol = (Rol == null) ? 0 : Rol;
+            usuario.Rol.IdRol = (byte)((Rol == null) ? 0 : Rol);
             ML.Result result = BL.Usuario.GetAll(usuario);
             
 
@@ -74,6 +74,7 @@ namespace SL.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
 
         // PUT api/<UsuarioController>/5
