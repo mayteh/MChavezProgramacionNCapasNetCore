@@ -46,7 +46,7 @@ namespace PL.Controllers
         
 
         [HttpPost]
-        public ActionResult Form(ML.Usuario usuario) //se usa el int? para que acepte valores null
+        public ActionResult Form(ML.Empleado empleado) //se usa el int? para que acepte valores null
         {
             IFormFile image = Request.Form.Files["ImagenData"];
             /*ML.Usuario usuariov = new ML.Usuario();*/ //Se instancia la clase usuario para poder asignar el Rol
@@ -57,14 +57,14 @@ namespace PL.Controllers
                 //llamar al metodo que convierte a bytes la imagen
                 byte[] ImagenBytes = ConvertToBytes(image);
                 //convierto a base 64 la imagen y la guardo en la propiedad de imagen en el objeto alumno
-                usuario.Imagen = Convert.ToBase64String(ImagenBytes);
+                empleado.Foto = Convert.ToBase64String(ImagenBytes);
             }
+            //empleado.NumeroEmpleado == "0"
 
-            
-                if (usuario.IdUsuario == 0)
+                if (empleado.NumeroEmpleado != null)
                 {
 
-                    ML.Result result = BL.Usuario.Add(usuario);
+                    ML.Result result = BL.Empleado.Add(empleado);
                     if (result.Correct)
                     {
                         ViewBag.Message = result.Message;
@@ -76,19 +76,19 @@ namespace PL.Controllers
 
                 }
 
-                else
-                {
-                    ML.Result result = BL.Usuario.Update(usuario);
+                //else
+                //{
+                //    ML.Result result = BL.Empleado.Update(empleado);
 
-                    if (result.Correct)
-                    {
-                        ViewBag.Message = result.Message;
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Error: " + result.Message;
-                    }
-                }
+                //    if (result.Correct)
+                //    {
+                //        ViewBag.Message = result.Message;
+                //    }
+                //    else
+                //    {
+                //        ViewBag.Message = "Error: " + result.Message;
+                //    }
+                //}
 
                 return PartialView("Modal");
         }

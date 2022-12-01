@@ -9,7 +9,7 @@ namespace ML
     public class Rol
     {
             
-        public byte IdRol { get; set; }
+        public byte? IdRol { get; set; }
         public string? NombreRol { get; set; }
         public List<object>? Roles { get; set; }
     }

@@ -100,13 +100,13 @@
                             @if (usuario.Status)
                             {
                                     <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked onchange="ChangeStatus(@usuario.IdUsuario,0)">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked onchange="ChangeStatus(@usuario.IdUsuario,this)">
                                     </div>                   
                             }
                             else
                             {
                                     <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" disabled onchange="ChangeStatus(@usuario.IdUsuario,1)">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" onchange="ChangeStatus(@usuario.IdUsuario,this)">
                                     </div>
                             }
                         </td>
@@ -147,7 +147,8 @@
     </script>
 
     <script type="text/javascript">
-        function ChangeStatus(idUsuario, status) {
+        function ChangeStatus(idUsuario, e) {
+            var status = e.checked
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("ActualizarEstatus")',

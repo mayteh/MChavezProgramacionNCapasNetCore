@@ -150,6 +150,8 @@ namespace BL
                         usuario.Direccion.Colonia.Municipio.Estado.Pais.IdPais = tableUsuario.IdPais;
                         usuario.Direccion.Colonia.Municipio.Estado.Pais.NombrePais = tableUsuario.NombrePais;
 
+                        usuario.Status = tableUsuario.Status.Value;
+
                         //boxing
                         //Almacenar cualquier tipo de dato en un dato object
                         result.Object = usuario;
@@ -228,14 +230,14 @@ namespace BL
 
         }
 
-        public static ML.Result DelateEF(ML.Usuario usuario)
+        public static ML.Result DelateEF(int idUsuario)
         {
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.MchavezProgramacionNcapasContext contex = new DL.MchavezProgramacionNcapasContext())
                 {
-                    int query = contex.Database.ExecuteSqlRaw($"UsuarioDelate {usuario.IdUsuario}");
+                    int query = contex.Database.ExecuteSqlRaw($"UsuarioDelate {idUsuario}");
 
                     if (query >= 1)
                     {
@@ -397,7 +399,7 @@ namespace BL
         }
 
 
-        public static ML.Result ChangeStatus(int idUsuario, int status)
+        public static ML.Result ChangeStatus(int idUsuario, bool status)
         {
             ML.Result result = new ML.Result();
 

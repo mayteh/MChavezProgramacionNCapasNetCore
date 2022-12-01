@@ -181,11 +181,11 @@ namespace PL.Controllers
             }
         }
 
-        public ActionResult Delete(ML.Usuario usuario)
+        public ActionResult Delete(int idUsuario)
         {
-            if (usuario.IdUsuario >= 1)
+            if (idUsuario >= 1)
             {   /*ML.Usuario usuario = new ML.Usuario();*/
-                ML.Result result = BL.Usuario.DelateEF(usuario);
+                ML.Result result = BL.Usuario.DelateEF(idUsuario);
                 if (result.Correct)
                 {
                     ViewBag.Message = result.Message;
@@ -233,7 +233,7 @@ namespace PL.Controllers
 
         //PARA STATUS
 
-        public JsonResult ActualizarEstatus(int idUsuario, int status)
+        public JsonResult ActualizarEstatus(int idUsuario, bool status)
         {
             var result = BL.Usuario.ChangeStatus(idUsuario, status);   //Se inicializa el result con el metodo ChangeStatus
             return Json(result.Object);
