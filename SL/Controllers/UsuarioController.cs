@@ -72,9 +72,18 @@ namespace SL.Controllers
 
         // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] ML.Usuario usuario)
         {
+            ML.Result result = BL.Usuario.Add(usuario);
 
+            if(result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // PUT api/<UsuarioController>/5

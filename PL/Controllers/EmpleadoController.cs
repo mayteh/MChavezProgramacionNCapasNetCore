@@ -23,7 +23,7 @@ namespace PL.Controllers
                 return View(empleado);
             }
         [HttpGet] //Verifica si el usuario viene null o con informacion
-        public ActionResult Form(string? NumeroUsuario) //se usa el int? para que acepte valores null
+        public ActionResult Form(string? NumeroEmpleado) //se usa el int? para que acepte valores null
         {
             ML.Empresa empresa = new ML.Empresa();
             ML.Empleado empleado = new ML.Empleado(); //Se instancia la clase usuario para poder asignar el Rol
@@ -31,15 +31,32 @@ namespace PL.Controllers
 
             ML.Result resultEmpresa = BL.Empresa.GetAll(empresa);
 
-            if (NumeroUsuario == null)
+            if (NumeroEmpleado == null)
             {
+                empleado.Action = "Add";
                 empleado.Empresa.Empresas = resultEmpresa.Objects;
                 return View(empleado);
             }
 
             else
             {
-                ViewBag.Message = "Error al cargar la informacion";
+                empleado.Action = "Update";
+                //GET BY ID
+                ML.Result result = BL.Empleado.GetById(NumeroEmpleado);
+
+                if (result.Correct)
+                {
+                    //Se tiene que hacer un unboxing del objeto que nos trajo el metodo de GEYBYID este a su vez los muestra en la vista
+                    empleado = (ML.Empleado)result.Object;// Unboxing
+                    empleado.Empresa.Empresas = resultEmpresa.Objects; //ResultRol trae todos los Roles es necesario especificar la ruta: usuario.Rol.Roles
+
+                    return View(empleado);
+                }
+                else
+                {
+                    ViewBag.Message = "Error al cargar la informacion";
+                }
+                
             }
             return View(empleado);
         }
@@ -61,11 +78,13 @@ namespace PL.Controllers
             }
             //empleado.NumeroEmpleado == "0"
 
-                if (empleado.NumeroEmpleado != null)
+            
+                if (empleado.Action == "Add")
                 {
 
                     ML.Result result = BL.Empleado.Add(empleado);
-                    if (result.Correct)
+
+                if (result.Correct)
                     {
                         ViewBag.Message = result.Message;
                     }
@@ -76,24 +95,42 @@ namespace PL.Controllers
 
                 }
 
-                //else
-                //{
-                //    ML.Result result = BL.Empleado.Update(empleado);
+            else
+            {
+                    ML.Result result = BL.Empleado.Update(empleado);
 
-                //    if (result.Correct)
-                //    {
-                //        ViewBag.Message = result.Message;
-                //    }
-                //    else
-                //    {
-                //        ViewBag.Message = "Error: " + result.Message;
-                //    }
-                //}
+                    if (result.Correct)
+                    {
+                        ViewBag.Message = result.Message;
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Error: " + result.Message;
+                    }
+                
+            }
 
-                return PartialView("Modal");
+            return PartialView("Modal");
         }
 
+        public ActionResult Delete(string NumeroEmpleado)
+        {
+            if (NumeroEmpleado != null)
+            {   /*ML.Usuario usuario = new ML.Usuario();*/
+                ML.Result result = BL.Empleado.DelateEF(NumeroEmpleado);
+                if (result.Correct)
+                {
+                    ViewBag.Message = result.Message;
+                }
+                else
+                {
+                    ViewBag.Message = "Error:" + result.Message;
+                }
 
+            }
+
+            return PartialView("Modal");
+        }
 
         public byte[] ConvertToBytes(IFormFile Imagen)
         {

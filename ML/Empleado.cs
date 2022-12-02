@@ -20,6 +20,7 @@ namespace ML
         public string? FechaIngreso { get; set; }
         public string? Foto { get; set; }
 
+        public string Action { get; set; }
 
         // //PROPIEDAD DE NAVEGACION
 

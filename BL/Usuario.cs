@@ -80,11 +80,18 @@ namespace BL
 
                             result.Objects.Add(usuarioobj);//Agrega todos los datos a usuario
                         }
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.Message = "No existen registros en la tabla de usuario";
                     }
 
                 }
                 result.Correct = true;
             }// cierre de try
+
             catch (Exception ex)
             {
                 result.Correct = false;

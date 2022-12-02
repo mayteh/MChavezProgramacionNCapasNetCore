@@ -115,9 +115,9 @@
                                 @Html.ValidationMessageFor(model => model.NumeroEmpleado)
 
                             </div>
-
+                            
                         </div>
-
+                        @Html.HiddenFor(model => model.Action) @*Para no perder el numero de empleado*@
                         <div class="col-md-3">
                             @Html.LabelFor(model => model.RFC)
                             <div class="input-group mb-3">
@@ -198,8 +198,10 @@
 
                             @Html.ValidationMessageFor(model => model.Foto)
                         </div>   @*Imagen*@
-                        @Html.HiddenFor(model => model.Foto) @*Para no perder la imagen*@
+                        @*@Html.HiddenFor(model => model.Foto) @*Para no perder la imagen
+                        @Html.HiddenFor(model => model.Action) @*Para no perder el numero de empleado*@
                     </div>
+                    @Html.HiddenFor(model => model.Foto) @*Para no perder la imagen*@
                     
                     <div class="form-group">
 

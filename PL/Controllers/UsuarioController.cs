@@ -5,30 +5,72 @@ namespace PL.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+
+        public UsuarioController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        {
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         [HttpGet]
         public ActionResult GetAll()
         {
             ML.Usuario usuario = new ML.Usuario();
             ML.Result result = new ML.Result();
-
             usuario.Rol = new ML.Rol();
+            ML.Result resultRol = BL.Rol.GetAll(); //mostrar roles
+            /*result = BL.Usuario.GetAll(usuario);*/ //mostrar usuarios
 
-            ML.Result resultRol = BL.Rol.GetAll();
-            result = BL.Usuario.GetAll(usuario);
-           
+
+            try
+            {
+                string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
+                {
+                    client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
+
+                    var responseTask = client.GetAsync("Usuario/GetAll");
+                    //result = bl.alumno.GetAll();
+
+                    responseTask.Wait();
+
+                    var resultServicio = responseTask.Result;
+
+                    if (resultServicio.IsSuccessStatusCode)
+                    {
+                        var readTask = resultServicio.Content.ReadAsAsync<ML.Result>();
+                        readTask.Wait();
+
+                        foreach (var resultItem in readTask.Result.Objects)
+                        {
+                            ML.Usuario resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(resultItem.ToString());
+                            result.Objects.Add(resultItemList);
+                        }
+                        result.Correct = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.Ex = ex;
+            }
 
             if (result.Correct)
             {
-                usuario.Usuarios = result.Objects;
                 usuario.Rol.Roles = resultRol.Objects;
+                usuario.Usuarios = result.Objects;
+                return View(usuario);
             }
             else
             {
                 ViewBag.Message = "Error al cargar la informacion";
+                return View();
             }
-
-
-            return View(usuario);
+            
         }
 
         [HttpPost]
