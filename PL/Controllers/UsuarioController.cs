@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ML;
 using System.Drawing.Drawing2D;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace PL.Controllers
 {
@@ -18,13 +21,11 @@ namespace PL.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            ML.Usuario usuario = new ML.Usuario();
-            ML.Result result = new ML.Result();
-            usuario.Rol = new ML.Rol();
             ML.Result resultRol = BL.Rol.GetAll(); //mostrar roles
-            /*result = BL.Usuario.GetAll(usuario);*/ //mostrar usuarios
-
-
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.Rol = new ML.Rol();
+            ML.Result result = new ML.Result();
+            result.Objects = new List<object>();
             try
             {
                 string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
@@ -33,7 +34,6 @@ namespace PL.Controllers
                     client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
 
                     var responseTask = client.GetAsync("Usuario/GetAll");
-                    //result = bl.alumno.GetAll();
 
                     responseTask.Wait();
 
@@ -57,31 +57,64 @@ namespace PL.Controllers
             {
                 result.Correct = false;
                 result.Ex = ex;
+                result.Message = "Ocurrio un error al cargar la información" + result.Ex;
             }
 
             if (result.Correct)
             {
                 usuario.Rol.Roles = resultRol.Objects;
                 usuario.Usuarios = result.Objects;
-                return View(usuario);
             }
             else
             {
                 ViewBag.Message = "Error al cargar la informacion";
-                return View();
             }
-            
+            return View (usuario);
         }
 
         [HttpPost]
-        public ActionResult GetAll(ML.Usuario usuario)
+        public ActionResult GetAll(string? Nombre, string? ApellidoPaterno, byte Rol)
         {
-            ML.Result result = BL.Usuario.GetAll(usuario);
-            usuario.Rol = new ML.Rol();
-
             ML.Result resultRol = BL.Rol.GetAll();
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.Rol = new ML.Rol();
+            ML.Result result = new ML.Result();
+            result.Objects = new List<object>();
 
-            //ML.Result result = BL.Usuario.GetAll(usuario);
+            try
+            {
+                string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
+                {
+                    client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
+
+                    var responseTask = client.PostAsJsonAsync("Usuario/GetAll" + Nombre + ApellidoPaterno, Rol);
+
+                    responseTask.Wait();
+
+                    var resultServicio = responseTask.Result;
+
+                    if (resultServicio.IsSuccessStatusCode)
+                    {
+                        var readTask = resultServicio.Content.ReadAsAsync<ML.Result>();
+                        readTask.Wait();
+
+                        foreach (var resultItem in readTask.Result.Objects)
+                        {
+                            ML.Usuario resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(resultItem.ToString());
+                            result.Objects.Add(resultItemList);
+                        }
+                        result.Correct = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.Ex = ex;
+                result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+            }
+
             if (result.Correct)
             {
                 usuario.Usuarios = result.Objects;
@@ -125,7 +158,41 @@ namespace PL.Controllers
             else
             {
                 //GET BY ID
-                ML.Result result = BL.Usuario.GetById(IdUsuario.Value);
+                //ML.Result result = BL.Usuario.GetById(IdUsuario.Value);
+                ML.Result result = new ML.Result();
+                try
+                {
+                    string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                    using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
+                    {
+                        client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
+
+                        var responseTask = client.GetAsync("Usuario/GetById/"+IdUsuario);
+
+                        responseTask.Wait();
+
+                        var resultServicio = responseTask.Result;
+
+                        if (resultServicio.IsSuccessStatusCode)
+                        {
+                            var readTask = resultServicio.Content.ReadAsAsync<ML.Result>();
+                            readTask.Wait();
+                            //ML.Departamento resultItemList = new ML.Departamento();
+                            ML.Usuario resultItemList = new ML.Usuario();
+                            resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(readTask.Result.Object.ToString());
+                            result.Object = resultItemList;
+                        }
+                        result.Correct = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.Correct = false;
+                    result.Ex = ex;
+                    result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+                }
+
+
 
                 if (result.Correct)
                 {
@@ -151,6 +218,7 @@ namespace PL.Controllers
                 else
                 {
                     ViewBag.Message = "Error al cargar la informacion";
+                    //return View(usuario);
                 }
                 return View(usuario);
             }
@@ -159,6 +227,8 @@ namespace PL.Controllers
         [HttpPost]
         public ActionResult Form(ML.Usuario usuario) //se usa el int? para que acepte valores null
         {
+            ML.Result result = new ML.Result();
+            result.Objects = new List<object>();
             IFormFile image = Request.Form.Files["ImagenData"];
             /*ML.Usuario usuariov = new ML.Usuario();*/ //Se instancia la clase usuario para poder asignar el Rol
 
@@ -171,63 +241,177 @@ namespace PL.Controllers
                 usuario.Imagen = Convert.ToBase64String(ImagenBytes);
             }
 
-            if(ModelState.IsValid)
+            if (usuario.IdUsuario == 0)
             {
-                if (usuario.IdUsuario == 0)
+
+                try
                 {
-
-                    ML.Result result = BL.Usuario.Add(usuario);
-                    if (result.Correct)
+                    string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                    using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
                     {
-                        ViewBag.Message = result.Message;
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Error:" + result.Message;
-                    }
+                        client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
 
+                        var postTask = client.PostAsJsonAsync("Usuario/Add", usuario);
+
+                        postTask.Wait();
+
+                        var resultServicio = postTask.Result;
+
+                        if (resultServicio.IsSuccessStatusCode)
+                        {
+                            //return RedirectToAction("GetAll");
+                            result.Correct = true;
+                        }
+                    }
                 }
-
+                catch (Exception ex)
+                {
+                    result.Correct = false;
+                    result.Ex = ex;
+                    result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+                }
+                if (result.Correct)
+                {
+                    ViewBag.Message = result.Message;
+                }
                 else
                 {
-                    ML.Result result = BL.Usuario.Update(usuario);
-
-                    if (result.Correct)
-                    {
-                        ViewBag.Message = result.Message;
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Error: " + result.Message;
-                    }
+                    ViewBag.Message = "Error:" + result.Message;
                 }
 
-                return PartialView("Modal");
             }
             else
             {
-                ML.Result result = BL.Rol.GetAll();
-                ML.Result resultPais = BL.Pais.GetAll();
+                try
+                {
+                    string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                    using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
+                    {
+                        client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
 
-                usuario.Rol = new ML.Rol();
+                        var postTask = client.PostAsJsonAsync<ML.Usuario>("Usuario/Update/"+ usuario.IdUsuario, usuario);
 
-                usuario.Direccion = new ML.Direccion();
-                usuario.Direccion.Colonia = new ML.Colonia();
-                usuario.Direccion.Colonia.Municipio = new ML.Municipio();
-                usuario.Direccion.Colonia.Municipio.Estado = new ML.Estado();
-                usuario.Direccion.Colonia.Municipio.Estado.Pais = new ML.Pais();
+                        postTask.Wait();
 
-                usuario.Rol.Roles = result.Objects;
-                usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
-                return View(usuario);
+                        var resultServicio = postTask.Result;
+
+                        if (resultServicio.IsSuccessStatusCode)
+                        {
+                            //return RedirectToAction("GetAll");
+                            result.Correct = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.Correct = false;
+                    result.Ex = ex;
+                    result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+                }
+                //return View(usuario);
+                if (result.Correct)
+                {
+                    ViewBag.Message = result.Message;
+                }
+                else
+                {
+                    ViewBag.Message = "Error:" + result.Message;
+                }
             }
+
+            //if (ModelState.IsValid)
+            //{
+            //    if (usuario.IdUsuario == 0)
+            //    {
+
+            //        ML.Result result = BL.Usuario.Add(usuario);
+            //        if (result.Correct)
+            //        {
+            //            ViewBag.Message = result.Message;
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Error:" + result.Message;
+            //        }
+
+            //    }
+
+            //    else
+            //    {
+            //        ML.Result result = BL.Usuario.Update(usuario);
+
+            //        if (result.Correct)
+            //        {
+            //            ViewBag.Message = result.Message;
+            //        }
+            //        else
+            //        {
+            //            ViewBag.Message = "Error: " + result.Message;
+            //        }
+            //    }
+
+            //    return PartialView("Modal");
+            //}
+            //else
+            //{
+            //    ML.Result result = BL.Rol.GetAll();
+            //    ML.Result resultPais = BL.Pais.GetAll();
+
+            //    usuario.Rol = new ML.Rol();
+
+            //    usuario.Direccion = new ML.Direccion();
+            //    usuario.Direccion.Colonia = new ML.Colonia();
+            //    usuario.Direccion.Colonia.Municipio = new ML.Municipio();
+            //    usuario.Direccion.Colonia.Municipio.Estado = new ML.Estado();
+            //    usuario.Direccion.Colonia.Municipio.Estado.Pais = new ML.Pais();
+
+            //    usuario.Rol.Roles = result.Objects;
+            //    usuario.Direccion.Colonia.Municipio.Estado.Pais.Paises = resultPais.Objects;
+            //    return View(usuario);
+            //}
+
+            return PartialView("Modal");
         }
 
-        public ActionResult Delete(int idUsuario)
+        public ActionResult Delete(int IdUsuario)
         {
-            if (idUsuario >= 1)
-            {   /*ML.Usuario usuario = new ML.Usuario();*/
-                ML.Result result = BL.Usuario.DelateEF(idUsuario);
+            ML.Result result = new ML.Result();
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.IdUsuario = IdUsuario;
+            if (IdUsuario >= 1)
+            {
+
+                try
+                {
+                    string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
+                    using (var client = new HttpClient()) //HTTPCLIENT es una clase para hacer llamadas a traves del protocolo HTTP se usa cada que se envia o consulta una informacion de una API
+                    {
+                        client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
+
+                        //var postTask = client.PostAsJsonAsync<ML.Usuario>("Usuario/Update/" + usuario.IdUsuario, usuario);
+                        var postTask = client.DeleteAsync("Usuario/Delete/" + IdUsuario);
+
+                        postTask.Wait();
+
+                        var resultServicio = postTask.Result;
+
+                        if (resultServicio.IsSuccessStatusCode)
+                        {
+                            //return RedirectToAction("GetAll");
+                            result.Correct = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.Correct = false;
+                    result.Ex = ex;
+                    result.Message = "Ocurrio un error al cargar la información" + result.Ex;
+                }
+
+
+
+                //ML.Result result = BL.Usuario.DelateEF(idUsuario);
                 if (result.Correct)
                 {
                     ViewBag.Message = result.Message;

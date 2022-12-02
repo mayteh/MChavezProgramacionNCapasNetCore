@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,10 +72,11 @@ namespace SL.Controllers
         }
 
         // POST api/<UsuarioController>
-        [HttpPost]
+        [HttpPost("Add")]
         public IActionResult Post([FromBody] ML.Usuario usuario)
         {
             ML.Result result = BL.Usuario.Add(usuario);
+
 
             if(result.Correct)
             {
@@ -87,16 +89,28 @@ namespace SL.Controllers
         }
 
         // PUT api/<UsuarioController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("Update/{IdUsuario}")]
+        public IActionResult Put(int IdUsuario, [FromBody]  ML.Usuario usuario)
         {
+            usuario.IdUsuario = IdUsuario;
+            //usuario.Rol = new ML.Rol();
+            ML.Result result = BL.Usuario.Update(usuario);
+
+            if (result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // DELETE api/<UsuarioController>/5
-        [HttpDelete("Delate/{idUsuario}")]
-        public IActionResult Delete(int idUsuario)
+        [HttpDelete("Delete/{IdUsuario}")]
+        public IActionResult Delete(int IdUsuario)
         { 
-                ML.Result result = BL.Usuario.DelateEF(idUsuario);
+                ML.Result result = BL.Usuario.DelateEF(IdUsuario);
                 if (result.Correct)
                 {
                     return Ok(result);

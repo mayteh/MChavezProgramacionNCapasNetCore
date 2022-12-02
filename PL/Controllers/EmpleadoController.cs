@@ -25,11 +25,13 @@ namespace PL.Controllers
         [HttpGet] //Verifica si el usuario viene null o con informacion
         public ActionResult Form(string? NumeroEmpleado) //se usa el int? para que acepte valores null
         {
+            ML.Empleado empleado = new ML.Empleado(); //Se crea un nuevo empleado
             ML.Empresa empresa = new ML.Empresa();
-            ML.Empleado empleado = new ML.Empleado(); //Se instancia la clase usuario para poder asignar el Rol
+            ML.Result resultEmpresa = BL.Empresa.GetAll(empresa);
+            
             empleado.Empresa = new ML.Empresa();
 
-            ML.Result resultEmpresa = BL.Empresa.GetAll(empresa);
+            
 
             if (NumeroEmpleado == null)
             {
