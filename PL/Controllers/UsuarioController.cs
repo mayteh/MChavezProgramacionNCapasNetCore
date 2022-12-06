@@ -73,7 +73,7 @@ namespace PL.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetAll(string? Nombre, string? ApellidoPaterno, byte Rol)
+        public ActionResult GetAll(string? Nombre, string? ApellidoPaterno, byte? Rol)
         {
             ML.Result resultRol = BL.Rol.GetAll();
             ML.Usuario usuario = new ML.Usuario();
@@ -227,8 +227,7 @@ namespace PL.Controllers
         [HttpPost]
         public ActionResult Form(ML.Usuario usuario) //se usa el int? para que acepte valores null
         {
-            ML.Result result = new ML.Result();
-            result.Objects = new List<object>();
+            //result.Objects = new List<object>();
             IFormFile image = Request.Form.Files["ImagenData"];
             /*ML.Usuario usuariov = new ML.Usuario();*/ //Se instancia la clase usuario para poder asignar el Rol
 
@@ -240,9 +239,10 @@ namespace PL.Controllers
                 //convierto a base 64 la imagen y la guardo en la propiedad de imagen en el objeto alumno
                 usuario.Imagen = Convert.ToBase64String(ImagenBytes);
             }
-
+            //ADD
             if (usuario.IdUsuario == 0)
             {
+                ML.Result result = new ML.Result();
 
                 try
                 {
@@ -282,6 +282,7 @@ namespace PL.Controllers
             }
             else
             {
+                ML.Result result = new ML.Result();
                 try
                 {
                     string urlAPI = _configuration["UrlAPI"]; //Se le asigna la direccion a URLAPI
@@ -289,7 +290,8 @@ namespace PL.Controllers
                     {
                         client.BaseAddress = new Uri(urlAPI); //Se crea un punto de referencia
 
-                        var postTask = client.PostAsJsonAsync<ML.Usuario>("Usuario/Update/"+ usuario.IdUsuario, usuario);
+                        //var postTask = client.PostAsJsonAsync<ML.Usuario>("Usuario/Update", usuario);
+                        var postTask = client.PutAsJsonAsync<ML.Usuario>("Usuario/Update", usuario);
 
                         postTask.Wait();
 

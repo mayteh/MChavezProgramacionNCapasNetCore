@@ -89,20 +89,25 @@ namespace SL.Controllers
         }
 
         // PUT api/<UsuarioController>/5
-        [HttpPost("Update/{IdUsuario}")]
-        public IActionResult Put(int IdUsuario, [FromBody]  ML.Usuario usuario)
+        [HttpPut("Update")]
+        public IActionResult Put([FromBody]  ML.Usuario usuario)
         {
-            usuario.IdUsuario = IdUsuario;
-            //usuario.Rol = new ML.Rol();
-            ML.Result result = BL.Usuario.Update(usuario);
-
-            if (result.Correct)
+            if (usuario.IdUsuario != null && usuario.IdUsuario != 0)
             {
-                return Ok(result);
+                ML.Result result = BL.Usuario.Update(usuario);
+
+                if (result.Correct)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
             }
             else
             {
-                return NotFound();
+                return BadRequest("Especifique el ID del objeto a actualizar");
             }
         }
 

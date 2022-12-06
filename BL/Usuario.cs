@@ -23,6 +23,7 @@ namespace BL
                     var usuarios = contex.Usuarios.FromSqlRaw($"UsuarioGetAll '{usuario.NombreUsuario}', '{usuario.ApellidoPaternoU}', {usuario.Rol.IdRol}").ToList();
 
                     result.Objects = new List<object>();
+                    //result.Objects = new List<object>();
 
                     if (usuarios != null)//Si las rows dentro de nuestra lista query es diferente de null
                     {
